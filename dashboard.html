@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="dashboard-page">
+
+<div class="dashboard-container">
+
+    <!-- 🔝 Top Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        
+        <h2 class="dashboard-title">📊 Student Dashboard</h2>
+
+        <div>
+            <a href="/logout" class="logout-btn">Logout</a>
+
+            <!-- 🌙 DARK MODE BUTTON -->
+            <span id="themeIcon" onclick="toggleDark()" 
+                  style="cursor:pointer; font-size:22px; margin-left:10px;">
+                🌙
+            </span>
+        </div>
+    </div>
+
+    <!-- 📥 Add Student Form -->
+    <div class="form-box">
+        <form method="POST">
+            <input type="text" name="name" placeholder="Student Name" required>
+            <input type="number" name="sub1" placeholder="Subject 1" required>
+            <input type="number" name="sub2" placeholder="Subject 2" required>
+            <input type="number" name="sub3" placeholder="Subject 3" required>
+
+            <button type="submit">➕ Add Student</button>
+        </form>
+    </div>
+
+    <!-- 📄 Download Button -->
+    <a href="/download" class="download-btn">📄 Download PDF</a>
+
+    <!-- 📊 Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Percentage</th>
+                <th>Grade</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% if data|length == 0 %}
+        <tr>
+            <td colspan="4" class="empty-state">
+                📭 No student data available
+            </td>
+        </tr>
+        {% else %}
+        {% for row in data %}
+        <tr>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[5] }}%</td>
+            <td>{{ row[6] }}</td>
+            <td>
+                <a href="/edit/{{row[0]}}">✏️</a>
+                <a href="/delete/{{row[0]}}">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+
+        </tbody>
+    </table>
+
+    <!-- 📊 Chart -->
+    <canvas id="myChart" class="dashboard-chart"></canvas>
+
+</div>
+
+<!-- 🌙 DARK MODE SCRIPT -->
+<script>
+window.onload = function () {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("themeIcon").innerText = "☀️";
+    }
+};
+
+function toggleDark() {
+    const body = document.body;
+    const icon = document.getElementById("themeIcon");
+
+    body.classList.toggle("dark-mode");
+
+    if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        icon.innerText = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        icon.innerText = "🌙";
+    }
+}
+</script>
+
+<!-- 📊 CHART SCRIPT -->
+<script>
+    const labels = JSON.parse('{{ names | tojson | safe }}');
+    const marks = JSON.parse('{{ marks | tojson | safe }}');
+
+    new Chart(document.getElementById('myChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Student Percentage',
+                data: marks
+            }]
+        }
+    });
+</script>
+
+
+</body>
+</html>
