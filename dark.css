@@ -1,0 +1,41 @@
+body.dark-mode {
+    background: #121212 !important;
+    color: white !important;
+}
+
+/* Container */
+body.dark-mode .dashboard-container {
+    background: transparent;
+}
+
+/* Form */
+body.dark-mode .form-box {
+    background: #1e1e1e !important;
+    color: white;
+}
+
+/* Table */
+body.dark-mode table {
+    background: #1e1e1e !important;
+    color: white;
+}
+
+body.dark-mode th {
+    background: #333 !important;
+}
+
+body.dark-mode td {
+    border-bottom: 1px solid #444;
+}
+
+/* Inputs */
+body.dark-mode input {
+    background: #333;
+    color: white;
+    border: none;
+}
+
+/* Buttons */
+body.dark-mode button {
+    background: #555;
+}
